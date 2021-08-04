@@ -22,6 +22,7 @@ class MapPicker extends StatefulWidget {
   const MapPicker(
     this.apiKey, {
     Key key,
+    this.pinWidget,
     this.initialCenter,
     this.initialZoom,
     this.requiredGPS,
@@ -41,6 +42,7 @@ class MapPicker extends StatefulWidget {
   }) : super(key: key);
 
   final String apiKey;
+  final Widget pinWidget;
 
   final LatLng initialCenter;
   final double initialZoom;
@@ -317,12 +319,12 @@ class MapPickerState extends State<MapPicker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Icon(Icons.place, size: 56),
-            Image.asset(
-              'assets/pin.png',
-              height: 56,
-              width: 56,
-            ),
+            widget.pinWidget ??
+                Icon(
+                  Icons.place,
+                  size: 56,
+                  color: Color(0xFFC01653),
+                ),
             Container(
               decoration: ShapeDecoration(
                 shadows: [

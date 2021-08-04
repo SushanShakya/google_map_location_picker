@@ -40,9 +40,11 @@ class LocationPicker extends StatefulWidget {
     this.countries,
     this.language,
     this.desiredAccuracy,
+    this.pinWidget,
   });
 
   final String apiKey;
+  final Widget pinWidget;
 
   final LatLng initialCenter;
   final double initialZoom;
@@ -407,6 +409,7 @@ class LocationPickerState extends State<LocationPicker> {
           ),
           body: MapPicker(
             widget.apiKey,
+            pinWidget: widget.pinWidget,
             initialCenter: widget.initialCenter,
             initialZoom: widget.initialZoom,
             requiredGPS: widget.requiredGPS,
@@ -462,6 +465,7 @@ Future<LocationResult> showLocationPicker(
   Decoration resultCardDecoration,
   String language = 'en',
   LocationAccuracy desiredAccuracy = LocationAccuracy.best,
+  Widget pinWidget,
 }) async {
   final results = await Navigator.of(context).push(
     MaterialPageRoute<dynamic>(
@@ -469,6 +473,7 @@ Future<LocationResult> showLocationPicker(
         // print('[LocationPicker] [countries] ${countries.join(', ')}');
         return LocationPicker(
           apiKey,
+          pinWidget: pinWidget,
           initialCenter: initialCenter,
           initialZoom: initialZoom,
           requiredGPS: requiredGPS,

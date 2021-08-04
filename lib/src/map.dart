@@ -164,6 +164,7 @@ class MapPickerState extends State<MapPicker> {
       child: Stack(
         children: <Widget>[
           GoogleMap(
+            zoomControlsEnabled: false,
             myLocationButtonEnabled: false,
             initialCameraPosition: CameraPosition(
               target: widget.initialCenter,
@@ -197,14 +198,33 @@ class MapPickerState extends State<MapPicker> {
             mapType: _currentMapType,
             myLocationEnabled: true,
           ),
-          _MapFabs(
-            myLocationButtonEnabled: widget.myLocationButtonEnabled,
-            layersButtonEnabled: widget.layersButtonEnabled,
-            onToggleMapTypePressed: _onToggleMapTypePressed,
-            onMyLocationPressed: _initCurrentLocation,
-          ),
+          // _MapFabs(
+          //   myLocationButtonEnabled: widget.myLocationButtonEnabled,
+          //   layersButtonEnabled: widget.layersButtonEnabled,
+          //   onToggleMapTypePressed: _onToggleMapTypePressed,
+          //   onMyLocationPressed: _initCurrentLocation,
+          // ),
           pin(),
-          locationCard(),
+          Consumer<LocationProvider>(
+            builder: (context, locationProvider, _) {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: NavigationBtn(
+                  onPressed: () {
+                    Navigator.of(context).pop({
+                      'location': LocationResult(
+                        latLng: locationProvider.lastIdleLocation,
+                        address: _address,
+                        placeId: _placeId,
+                      )
+                    });
+                  },
+                  text: "Continue",
+                ),
+              );
+            },
+          ),
+          // locationCard(),
         ],
       ),
     );
@@ -297,13 +317,18 @@ class MapPickerState extends State<MapPicker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.place, size: 56),
+            // Icon(Icons.place, size: 56),
+            Image.asset(
+              'assets/pin.png',
+              height: 56,
+              width: 56,
+            ),
             Container(
               decoration: ShapeDecoration(
                 shadows: [
                   BoxShadow(
                     blurRadius: 4,
-                    color: Colors.black38,
+                    color: Color(0xFFC01653),
                   ),
                 ],
                 shape: CircleBorder(
@@ -485,6 +510,55 @@ class _MapFabs extends StatelessWidget {
               heroTag: "myLocation",
             ),
         ],
+      ),
+    );
+  }
+}
+
+class NavigationBtn extends StatelessWidget {
+  final String text;
+  final Widget child;
+  final Function onPressed;
+  final EdgeInsets padding;
+
+  const NavigationBtn({
+    Key key,
+    this.padding,
+    this.text,
+    this.onPressed,
+    this.child,
+  })  : assert(text != null || child != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.6),
+      ),
+      padding: padding ?? const EdgeInsets.all(15),
+      // ignore: deprecated_member_use
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          height: 28.0 + 20,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xFFC01653),
+          ),
+          child: Center(
+            child: child ??
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+          ),
+        ),
       ),
     );
   }

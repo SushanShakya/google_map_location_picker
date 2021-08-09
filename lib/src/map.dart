@@ -319,12 +319,17 @@ class MapPickerState extends State<MapPicker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            widget.pinWidget ??
-                Icon(
-                  Icons.place,
-                  size: 56,
-                  color: Color(0xFFC01653),
-                ),
+            // widget.pinWidget ??
+            //     Icon(
+            //       Icons.place,
+            //       size: 56,
+            //       color: Color(0xFFC01653),
+            //     ),
+            Image.asset(
+              "assets/pin.png",
+              height: 56,
+              width: 56,
+            ),
             Container(
               decoration: ShapeDecoration(
                 shadows: [
